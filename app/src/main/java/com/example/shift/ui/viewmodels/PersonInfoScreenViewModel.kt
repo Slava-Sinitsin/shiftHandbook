@@ -26,4 +26,9 @@ class PersonInfoScreenViewModel(
     fun onBackButtonClick() {
         navController.popBackStack()
     }
+
+    fun formatDate(dateString: String): String {
+        val parts = dateString.split("T")[0].split("-")
+        return "${parts[0]}.${parts[1]}.${parts[2]}"
+    }
 }
