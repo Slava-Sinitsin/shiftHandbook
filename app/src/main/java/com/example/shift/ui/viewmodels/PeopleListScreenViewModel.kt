@@ -10,7 +10,7 @@ import com.example.shift.data.mappers.PersonCardInfo
 import com.example.shift.data.repository.UserAPIRepositoryImpl
 import kotlinx.coroutines.launch
 
-class PeopleListScreenViewModel : ViewModel() {
+class PeopleListScreenViewModel(val onPersonClick: (personIndex: Int) -> Unit) : ViewModel() {
     private var peopleList by mutableStateOf(PeopleInfo())
     var peopleCardInfo by mutableStateOf<List<PersonCardInfo>>(emptyList())
         private set
@@ -22,10 +22,8 @@ class PeopleListScreenViewModel : ViewModel() {
     }
 
     private suspend fun fetchData() {
-        UserAPIRepositoryImpl.getPeople().body()?.let { peopleInfo ->
-            peopleList = peopleInfo
-            updatePeopleCardInfo()
-        }
+        peopleList = UserAPIRepositoryImpl.getPeopleInfoList()
+        updatePeopleCardInfo()
     }
 
     private fun updatePeopleCardInfo() {
@@ -47,5 +45,9 @@ class PeopleListScreenViewModel : ViewModel() {
         viewModelScope.launch {
             fetchData()
         }
+    }
+
+    fun navigateToPerson(personIndex: Int) {
+        onPersonClick(personIndex)
     }
 }

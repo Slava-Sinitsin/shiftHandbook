@@ -40,11 +40,11 @@ import com.example.shift.ui.viewmodels.PeopleListScreenViewModel
 
 @Suppress("UNCHECKED_CAST")
 @Composable
-fun Application() {
+fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
     val viewModel = viewModel<PeopleListScreenViewModel>(
         factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return PeopleListScreenViewModel() as T
+                return PeopleListScreenViewModel(onPersonClick) as T
             }
         }
     )
@@ -113,7 +113,7 @@ fun Person(viewModel: PeopleListScreenViewModel, index: Int) {
             .padding(8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .clickable { },
+            .clickable { viewModel.navigateToPerson(index) },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),

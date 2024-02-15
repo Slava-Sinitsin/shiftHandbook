@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface UserAPI {
     @GET("?results=30")
-    suspend fun getPeople(): Response<PeopleInfo>
+    suspend fun getPeopleSource(): Response<PeopleInfo>
 }
