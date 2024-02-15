@@ -1,5 +1,6 @@
 package com.example.shift.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,7 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,6 +102,7 @@ fun PersonInfo(
     viewModel: PersonInfoScreenViewModel,
     paddingValues: PaddingValues
 ) {
+    val context = LocalContext.current
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -143,7 +148,8 @@ fun PersonInfo(
                         )
                         Text(
                             modifier = Modifier.padding(start = 4.dp),
-                            text = viewModel.formatDate(viewModel.person.dob?.date ?: "")
+                            text = viewModel.formatDate(viewModel.person.dob?.date ?: ""),
+                            fontSize = 15.sp
                         )
                     }
                     Row(
@@ -170,7 +176,8 @@ fun PersonInfo(
                         )
                         Text(
                             modifier = Modifier.padding(start = 2.dp),
-                            text = viewModel.person.dob?.age.toString()
+                            text = viewModel.person.dob?.age.toString(),
+                            fontSize = 15.sp
                         )
                     }
                 }
@@ -184,8 +191,13 @@ fun PersonInfo(
                         contentDescription = "LocationOnIcon"
                     )
                     Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = "${viewModel.person.location?.country}, ${viewModel.person.location?.city}, ${viewModel.person.location?.street?.name} ${viewModel.person.location?.street?.number}"
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .clickable { viewModel.onLocationClick(context) },
+                        text = "${viewModel.person.location?.country}, ${viewModel.person.location?.city}, ${viewModel.person.location?.street?.name} ${viewModel.person.location?.street?.number}",
+                        fontSize = 15.sp,
+                        style = TextStyle(textDecoration = TextDecoration.Underline),
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                 }
                 Row(
@@ -195,8 +207,13 @@ fun PersonInfo(
                 ) {
                     Icon(imageVector = Icons.Filled.Email, contentDescription = "EmailIcon")
                     Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = viewModel.person.email ?: "Not specified"
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .clickable { viewModel.onEmailClick(context) },
+                        text = viewModel.person.email ?: "Not specified",
+                        fontSize = 15.sp,
+                        style = TextStyle(textDecoration = TextDecoration.Underline),
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                 }
                 Row(
@@ -206,8 +223,13 @@ fun PersonInfo(
                 ) {
                     Icon(imageVector = Icons.Filled.Phone, contentDescription = "PhoneIcon")
                     Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = viewModel.person.phone ?: "Not specified"
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .clickable { viewModel.onPhoneNumberClick(context) },
+                        text = viewModel.person.phone ?: "Not specified",
+                        fontSize = 15.sp,
+                        style = TextStyle(textDecoration = TextDecoration.Underline),
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
