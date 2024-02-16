@@ -18,4 +18,6 @@
 P.S. Все библиотеки выбирались исходя из рекомендаций Google.
 
 ## Пример работы
-https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/0c35d81f-8155-428b-94b9-21f9dffcc625
+<p align="center">
+  <img width="400" height="250" src="[https://github.com/blademoon/Markdown/blob/main/Picture/cat.jpg](https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/0c35d81f-8155-428b-94b9-21f9dffcc625)https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/0c35d81f-8155-428b-94b9-21f9dffcc625">
+</p>
