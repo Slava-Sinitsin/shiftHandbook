@@ -65,7 +65,7 @@ fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            PeopleListCenterAlignedTopAppBar(
+            PeopleListTopAppBar(
                 viewModel = viewModel,
                 scrollBehavior = scrollBehavior
             )
@@ -77,7 +77,7 @@ fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PeopleListCenterAlignedTopAppBar(
+fun PeopleListTopAppBar(
     viewModel: PeopleListScreenViewModel,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -101,7 +101,8 @@ fun PeopleListCenterAlignedTopAppBar(
                 )
             }
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.topAppBarColors(scrolledContainerColor = MaterialTheme.colorScheme.surface)
     )
 }
 
@@ -150,7 +151,7 @@ fun Person(viewModel: PeopleListScreenViewModel, index: Int) {
                         .padding(start = 20.dp, top = 16.dp, bottom = 16.dp),
                     textAlign = TextAlign.Start,
                     text = "${person.name?.title} ${person.name?.first} ${person.name?.last}",
-                    fontSize = 15.sp
+                    fontSize = 20.sp
                 )
             }
             Divider(

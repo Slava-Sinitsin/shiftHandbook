@@ -63,7 +63,7 @@ fun PersonInfoScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { PersonInfoCenterAlignedTopAppBar(viewModel = viewModel) }
+        topBar = { PersonInfoTopAppBar(viewModel = viewModel) }
     ) { scaffoldPadding ->
         PersonInfo(viewModel = viewModel, paddingValues = scaffoldPadding)
     }
@@ -71,7 +71,7 @@ fun PersonInfoScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonInfoCenterAlignedTopAppBar(
+fun PersonInfoTopAppBar(
     viewModel: PersonInfoScreenViewModel
 ) {
     TopAppBar(
