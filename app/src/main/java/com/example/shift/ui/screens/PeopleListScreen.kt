@@ -25,10 +25,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,6 +43,7 @@ import com.example.shift.data.repository.ViewModelFactoryProvider
 import com.example.shift.ui.viewmodels.PeopleListScreenViewModel
 import dagger.hilt.android.EntryPointAccessors
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
     val factory = EntryPointAccessors.fromActivity(
@@ -52,10 +56,20 @@ fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
             onPersonClick
         )
     )
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { PeopleListCenterAlignedTopAppBar(viewModel = viewModel) }
+        topBar = {
+            PeopleListCenterAlignedTopAppBar(
+                viewModel = viewModel,
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) { scaffoldPadding ->
         PeopleList(viewModel = viewModel, paddingValues = scaffoldPadding)
     }
@@ -64,13 +78,10 @@ fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PeopleListCenterAlignedTopAppBar(
-    viewModel: PeopleListScreenViewModel
+    viewModel: PeopleListScreenViewModel,
+    scrollBehavior: TopAppBarScrollBehavior
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
-        ),
         title = {
             Text(
                 text = "Handbook",
@@ -86,9 +97,11 @@ fun PeopleListCenterAlignedTopAppBar(
                 Icon(
                     imageVector = Icons.Filled.Refresh,
                     contentDescription = "RefreshPeopleListIconButton",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
+        },
+        scrollBehavior = scrollBehavior
     )
 }
 
@@ -118,10 +131,7 @@ fun Person(viewModel: PeopleListScreenViewModel, index: Int) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .clickable { viewModel.navigateToPerson(index) },
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp
-        ),
-        colors = CardDefaults.cardColors()
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -129,7 +139,9 @@ fun Person(viewModel: PeopleListScreenViewModel, index: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    modifier = Modifier.clip(RoundedCornerShape(30.dp)),
+                    modifier = Modifier
+                        .padding(start = 4.dp, top = 2.dp)
+                        .clip(RoundedCornerShape(30.dp)),
                     model = person.picture?.large,
                     contentDescription = "PersonCardPicture"
                 )
@@ -158,13 +170,13 @@ fun Person(viewModel: PeopleListScreenViewModel, index: Int) {
                         fontSize = 15.sp
                     )
                 }
-                Row(modifier = Modifier.padding(top = 3.dp)) {
+                Row(modifier = Modifier.padding(vertical = 3.dp)) {
                     Icon(
                         imageVector = Icons.Filled.Phone,
                         contentDescription = "PhoneIcon"
                     )
                     Text(
-                        modifier = Modifier.padding(start = 3.dp),
+                        modifier = Modifier.padding(start = 2.dp),
                         text = "${person.phone}",
                         fontSize = 15.sp
                     )
