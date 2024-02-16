@@ -1,8 +1,12 @@
 package com.example.shift.data.mappers
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-data class Results(
+@Entity
+data class Person(
+    @PrimaryKey(autoGenerate = true) val pk: Int? = null,
     @SerializedName("gender") val gender: String? = null,
     @SerializedName("name") val name: Name? = Name(),
     @SerializedName("location") val location: Location? = Location(),

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.shift.data.mappers.PeopleInfo
+import com.example.shift.data.mappers.Person
 import com.example.shift.data.mappers.PersonCardInfo
 import com.example.shift.data.repository.UserAPIRepositoryImpl
 import dagger.assisted.Assisted
@@ -20,7 +20,7 @@ class PeopleListScreenViewModel @AssistedInject constructor(
     val onPersonClick: (personIndex: Int) -> Unit
 ) :
     ViewModel() {
-    private var peopleList by mutableStateOf(PeopleInfo())
+    private var peopleList by mutableStateOf(emptyList<Person>())
     var peopleCardInfo by mutableStateOf<List<PersonCardInfo>>(emptyList())
         private set
 
@@ -47,17 +47,13 @@ class PeopleListScreenViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            fetchData()
+            peopleList = repository.getPeople()
+            updatePeopleCardInfo()
         }
     }
 
-    private suspend fun fetchData() {
-        peopleList = repository.getPeopleInfoList()
-        updatePeopleCardInfo()
-    }
-
     private fun updatePeopleCardInfo() {
-        peopleCardInfo = peopleList.results.map { result ->
+        peopleCardInfo = peopleList.map { result ->
             PersonCardInfo(
                 name = result.name,
                 picture = result.picture,
@@ -73,7 +69,8 @@ class PeopleListScreenViewModel @AssistedInject constructor(
 
     fun refreshPeopleList() {
         viewModelScope.launch {
-            fetchData()
+            peopleList = repository.getPeopleFromSource()
+            updatePeopleCardInfo()
         }
     }
 

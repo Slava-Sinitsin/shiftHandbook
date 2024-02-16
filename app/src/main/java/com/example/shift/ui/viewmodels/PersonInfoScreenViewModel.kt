@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.shift.data.mappers.Location
-import com.example.shift.data.mappers.Results
+import com.example.shift.data.mappers.Person
 import com.example.shift.data.repository.UserAPIRepositoryImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -27,7 +27,7 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
     @Assisted
     val navController: NavHostController
 ) : ViewModel() {
-    var person by mutableStateOf(Results())
+    var person by mutableStateOf(Person())
         private set
 
     @AssistedFactory
@@ -55,7 +55,7 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            person = repository.peopleList.results[personIndex]
+            person = repository.peopleList[personIndex]
         }
     }
 
