@@ -40,7 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.shift.R
-import com.example.shift.data.repository.ViewModelFactoryProvider
+import com.example.shift.domain.di.ViewModelFactoryProvider
 import com.example.shift.ui.viewmodels.PersonInfoScreenViewModel
 import dagger.hilt.android.EntryPointAccessors
 

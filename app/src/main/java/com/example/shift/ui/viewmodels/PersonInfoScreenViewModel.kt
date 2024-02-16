@@ -1,6 +1,5 @@
 package com.example.shift.ui.viewmodels
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -14,14 +13,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.shift.data.mappers.Location
 import com.example.shift.data.mappers.Person
-import com.example.shift.data.repository.UserAPIRepositoryImpl
+import com.example.shift.data.repository.PeopleAPIRepositoryImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
 class PersonInfoScreenViewModel @AssistedInject constructor(
-    val repository: UserAPIRepositoryImpl,
+    val repository: PeopleAPIRepositoryImpl,
     @Assisted
     val personIndex: Int,
     @Assisted
@@ -87,10 +86,8 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
                 Uri.parse("geo:0,0?q=" + Uri.encode("${location.street?.number} ${location.street?.name}, ${location.city}, ${location.country}"))
             )
             startActivity(mapIntent)
-        } catch (e: ActivityNotFoundException) {
-            Log.e("ActivityNotFoundException", e.toString())
-        } catch (t: Throwable) {
-            Log.e("Exception", t.toString())
+        } catch (e: Exception) {
+            Log.e("Exception", e.toString())
         }
     }
 
@@ -100,10 +97,8 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
             intent.type = "vnd.android.cursor.item/email"
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(address))
             startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Log.e("ActivityNotFoundException", e.toString())
-        } catch (t: Throwable) {
-            Log.e("Exception", t.toString())
+        } catch (e: Exception) {
+            Log.e("Exception", e.toString())
         }
     }
 
@@ -111,10 +106,8 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
         try {
             val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$phone") }
             startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Log.e("ActivityNotFoundException", e.toString())
-        } catch (t: Throwable) {
-            Log.e("Exception", t.toString())
+        } catch (e: Exception) {
+            Log.e("Exception", e.toString())
         }
     }
 }

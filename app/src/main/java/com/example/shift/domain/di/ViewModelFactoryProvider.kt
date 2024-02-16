@@ -1,4 +1,4 @@
-package com.example.shift.data.repository
+package com.example.shift.domain.di
 
 import com.example.shift.ui.viewmodels.PeopleListScreenViewModel
 import com.example.shift.ui.viewmodels.PersonInfoScreenViewModel
