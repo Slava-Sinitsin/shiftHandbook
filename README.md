@@ -18,6 +18,4 @@
 P.S. Все библиотеки выбирались исходя из рекомендаций Google.
 
 ## Пример работы
-<p align="center">
-   src="https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/4e105922-97d7-499f-aeaa-48ebbb0f2be4"
-</p>
+https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/4e105922-97d7-499f-aeaa-48ebbb0f2be4
