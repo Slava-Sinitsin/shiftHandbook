@@ -4,16 +4,46 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.shift.data.mappers.PeopleInfo
 import com.example.shift.data.mappers.PersonCardInfo
 import com.example.shift.data.repository.UserAPIRepositoryImpl
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-class PeopleListScreenViewModel(val onPersonClick: (personIndex: Int) -> Unit) : ViewModel() {
+class PeopleListScreenViewModel @AssistedInject constructor(
+    val repository: UserAPIRepositoryImpl,
+    @Assisted
+    val onPersonClick: (personIndex: Int) -> Unit
+) :
+    ViewModel() {
     private var peopleList by mutableStateOf(PeopleInfo())
     var peopleCardInfo by mutableStateOf<List<PersonCardInfo>>(emptyList())
         private set
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            onPersonClick: (personIndex: Int) -> Unit
+        ): PeopleListScreenViewModel
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    companion object {
+        fun providePeopleListScreenViewModel(
+            factory: Factory,
+            onPersonClick: (personIndex: Int) -> Unit
+        ): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return factory.create(onPersonClick) as T
+                }
+            }
+        }
+    }
 
     init {
         viewModelScope.launch {
@@ -22,7 +52,7 @@ class PeopleListScreenViewModel(val onPersonClick: (personIndex: Int) -> Unit) :
     }
 
     private suspend fun fetchData() {
-        peopleList = UserAPIRepositoryImpl.getPeopleInfoList()
+        peopleList = repository.getPeopleInfoList()
         updatePeopleCardInfo()
     }
 

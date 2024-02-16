@@ -9,23 +9,53 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.shift.data.mappers.Location
 import com.example.shift.data.mappers.Results
 import com.example.shift.data.repository.UserAPIRepositoryImpl
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-class PersonInfoScreenViewModel(
-    private val personIndex: Int,
-    private val navController: NavHostController
+class PersonInfoScreenViewModel @AssistedInject constructor(
+    val repository: UserAPIRepositoryImpl,
+    @Assisted
+    val personIndex: Int,
+    @Assisted
+    val navController: NavHostController
 ) : ViewModel() {
     var person by mutableStateOf(Results())
         private set
 
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            personIndex: Int,
+            navController: NavHostController
+        ): PersonInfoScreenViewModel
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    companion object {
+        fun providePersonInfoScreenViewModel(
+            factory: Factory,
+            personIndex: Int,
+            navController: NavHostController
+        ): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return factory.create(personIndex, navController) as T
+                }
+            }
+        }
+    }
+
     init {
         viewModelScope.launch {
-            person = UserAPIRepositoryImpl.peopleList.results[personIndex]
+            person = repository.peopleList.results[personIndex]
         }
     }
 

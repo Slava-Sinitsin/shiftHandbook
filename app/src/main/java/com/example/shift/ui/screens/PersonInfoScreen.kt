@@ -1,5 +1,6 @@
 package com.example.shift.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,26 +37,29 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.shift.R
+import com.example.shift.data.repository.ViewModelFactoryProvider
 import com.example.shift.ui.viewmodels.PersonInfoScreenViewModel
+import dagger.hilt.android.EntryPointAccessors
 
-@Suppress("UNCHECKED_CAST")
 @Composable
 fun PersonInfoScreen(
     personIndex: Int,
     navController: NavHostController
 ) {
-    val viewModel = viewModel<PersonInfoScreenViewModel>(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return PersonInfoScreenViewModel(personIndex, navController) as T
-            }
-        }
+    val factory = EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        ViewModelFactoryProvider::class.java
+    ).personInfoScreenViewModelFactory()
+    val viewModel: PersonInfoScreenViewModel = viewModel(
+        factory = PersonInfoScreenViewModel.providePersonInfoScreenViewModel(
+            factory,
+            personIndex,
+            navController
+        )
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),

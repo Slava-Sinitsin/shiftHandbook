@@ -1,5 +1,6 @@
 package com.example.shift.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,25 +29,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.shift.data.repository.ViewModelFactoryProvider
 import com.example.shift.ui.viewmodels.PeopleListScreenViewModel
+import dagger.hilt.android.EntryPointAccessors
 
-@Suppress("UNCHECKED_CAST")
 @Composable
 fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
-    val viewModel = viewModel<PeopleListScreenViewModel>(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return PeopleListScreenViewModel(onPersonClick) as T
-            }
-        }
+    val factory = EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        ViewModelFactoryProvider::class.java
+    ).peopleListScreenViewModelFactory()
+    val viewModel: PeopleListScreenViewModel = viewModel(
+        factory = PeopleListScreenViewModel.providePeopleListScreenViewModel(
+            factory,
+            onPersonClick
+        )
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
