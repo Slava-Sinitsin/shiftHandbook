@@ -10,7 +10,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.shift.data.mappers.Location
 import com.example.shift.data.mappers.Person
 import com.example.shift.data.repository.PeopleAPIRepositoryImpl
@@ -22,9 +21,7 @@ import kotlinx.coroutines.launch
 class PersonInfoScreenViewModel @AssistedInject constructor(
     val repository: PeopleAPIRepositoryImpl,
     @Assisted
-    val personIndex: Int,
-    @Assisted
-    val navController: NavHostController
+    val personIndex: Int
 ) : ViewModel() {
     var person by mutableStateOf(Person())
         private set
@@ -32,8 +29,7 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            personIndex: Int,
-            navController: NavHostController
+            personIndex: Int
         ): PersonInfoScreenViewModel
     }
 
@@ -41,12 +37,11 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
     companion object {
         fun providePersonInfoScreenViewModel(
             factory: Factory,
-            personIndex: Int,
-            navController: NavHostController
+            personIndex: Int
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(personIndex, navController) as T
+                    return factory.create(personIndex) as T
                 }
             }
         }
@@ -56,10 +51,6 @@ class PersonInfoScreenViewModel @AssistedInject constructor(
         viewModelScope.launch {
             person = repository.peopleList[personIndex]
         }
-    }
-
-    fun onBackButtonClick() {
-        navController.popBackStack()
     }
 
     fun formatDate(dateString: String): String {

@@ -16,7 +16,7 @@
         android:theme="@style/Theme.SHIFT"
         tools:targetApi="31">
         <activity
-            android:name=".domain.navigation.StartNavigate"
+            android:name=".domain.navigation.AppNavGraph"
             android:exported="true"
             android:theme="@style/Theme.SHIFT">
             <intent-filter>

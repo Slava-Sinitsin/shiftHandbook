@@ -1,6 +1,5 @@
 package com.example.shift.ui.screens
 
-import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,25 +37,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.example.shift.domain.di.ViewModelFactoryProvider
 import com.example.shift.ui.viewmodels.PeopleListScreenViewModel
-import dagger.hilt.android.EntryPointAccessors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
-    val factory = EntryPointAccessors.fromActivity(
-        LocalContext.current as Activity,
-        ViewModelFactoryProvider::class.java
-    ).peopleListScreenViewModelFactory()
-    val viewModel: PeopleListScreenViewModel = viewModel(
-        factory = PeopleListScreenViewModel.providePeopleListScreenViewModel(
-            factory,
-            onPersonClick
-        )
-    )
+    val viewModel: PeopleListScreenViewModel = hiltViewModel()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -72,7 +60,11 @@ fun PeopleListScreen(onPersonClick: (personIndex: Int) -> Unit) {
             )
         }
     ) { scaffoldPadding ->
-        PeopleList(viewModel = viewModel, paddingValues = scaffoldPadding)
+        PeopleList(
+            viewModel = viewModel,
+            paddingValues = scaffoldPadding,
+            onPersonClick = onPersonClick
+        )
         if (viewModel.isError) {
             Toast.makeText(LocalContext.current, viewModel.responseMessage, Toast.LENGTH_SHORT)
                 .show()
@@ -115,7 +107,8 @@ fun PeopleListTopAppBar(
 @Composable
 fun PeopleList(
     viewModel: PeopleListScreenViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onPersonClick: (personIndex: Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
@@ -123,21 +116,26 @@ fun PeopleList(
         items(viewModel.peopleCardInfo.size) { index ->
             Person(
                 viewModel = viewModel,
-                index = index
+                index = index,
+                onPersonClick = onPersonClick
             )
         }
     }
 }
 
 @Composable
-fun Person(viewModel: PeopleListScreenViewModel, index: Int) {
+fun Person(
+    viewModel: PeopleListScreenViewModel,
+    index: Int,
+    onPersonClick: (personIndex: Int) -> Unit
+) {
     val person = viewModel.getPersonCardInfo(index = index)
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .clickable { viewModel.navigateToPerson(index) },
+            .clickable { onPersonClick(index) },
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {

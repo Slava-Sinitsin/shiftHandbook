@@ -4,21 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.shift.data.mappers.Person
 import com.example.shift.data.mappers.PersonCardInfo
 import com.example.shift.data.repository.PeopleAPIRepositoryImpl
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PeopleListScreenViewModel @AssistedInject constructor(
-    val repository: PeopleAPIRepositoryImpl,
-    @Assisted
-    val onPersonClick: (personIndex: Int) -> Unit
-) :
+@HiltViewModel
+class PeopleListScreenViewModel @Inject constructor(val repository: PeopleAPIRepositoryImpl) :
     ViewModel() {
     private var peopleList by mutableStateOf(emptyList<Person>())
     var peopleCardInfo by mutableStateOf<List<PersonCardInfo>>(emptyList())
@@ -27,27 +22,6 @@ class PeopleListScreenViewModel @AssistedInject constructor(
         private set
     var isError by mutableStateOf(false)
         private set
-
-    @AssistedFactory
-    interface Factory {
-        fun create(
-            onPersonClick: (personIndex: Int) -> Unit
-        ): PeopleListScreenViewModel
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    companion object {
-        fun providePeopleListScreenViewModel(
-            factory: Factory,
-            onPersonClick: (personIndex: Int) -> Unit
-        ): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(onPersonClick) as T
-                }
-            }
-        }
-    }
 
     init {
         viewModelScope.launch {
@@ -84,9 +58,5 @@ class PeopleListScreenViewModel @AssistedInject constructor(
             isError = responseMessage != "OK" && responseMessage != ""
             updatePeopleCardInfo()
         }
-    }
-
-    fun navigateToPerson(personIndex: Int) {
-        onPersonClick(personIndex)
     }
 }
