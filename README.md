@@ -1,6 +1,8 @@
 # shiftHandbook
 ## Задание
-![test](https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/538e9967-6654-4e3c-8520-a3caa748bc6c)
+<p align="center">
+  <img width="400" height="250" src="![test](https://github.com/Slava-Sinitsin/shiftHandbook/assets/77486493/538e9967-6654-4e3c-8520-a3caa748bc6c)">
+</p>
 
 ## Используемые инструменты
 
